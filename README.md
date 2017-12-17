@@ -15,3 +15,8 @@ Just play the song
 
 > *Alexa, ask YouTube Player to play Guns And Roses Estranged*
 > Alexa: *Playing 9:51 video called "Guns N' Roses - Estranged".* [plays the audio]
+
+## TODO
+
+* Audio starts playing and then cuts off after ~5 seconds. No errors reported in CloudWatch, just a `PlaybackStarted` event and then the audio stops. I've tried ending session or not, giving a unique token to `AudioPlayer`, neither of those changed this behavior.
+* Implement the conversation flow described in "example usage".
