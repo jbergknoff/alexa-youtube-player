@@ -90,25 +90,21 @@ const search = (search_terms, callback) => {
       (cb) => {
         const q = querystring.stringify(
           {
-            part: "snippet",
+            part: "id",
             maxResults: 3,
             q: search_terms,
             key: process.env.YOUTUBE_API_KEY
           }
         );
 
-        const request_url = `https://www.googleapis.com/youtube/v3/search?${q}`
-        console.log(`Making search request to YouTube: ${request_url}`);
         needle.get(
-          request_url,
+          `https://www.googleapis.com/youtube/v3/search?${q}`,
           { parse_response: true },
           (error, response, body) => {
             if (error || ~~(response || {}).statusCode !== 200) {
               console.log(`Failed searching YouTube: ${(response || {}).statusCode}\n${error || body}`);
               return cb({ text: "Sorry, searching YouTube failed. Try again later.", end_session: true });
             }
-
-            console.log(`YouTube search results: ${JSON.stringify(body)}`);
 
             const search_results = (body.items || []).map((item) => ((item || {}).id || {}).videoId).filter((x) => x);
             if (search_results.length == 0) {
@@ -179,7 +175,7 @@ exports.handler = (event, context, callback) => {
       return cb(null, { text: "Sorry, I couldn't understand what you said. Please ask again.", end_session: true });
     }
 
-    return search(event.request.intent || {}, cb);
+    return search(search_terms, cb);
   } else if (intent === "AMAZON.PauseIntent" || intent === "AMAZON.CancelIntent") {
     return cb(null, { text: "Okay", pause: true, end_session: true });
   } else if (intent === "AMAZON.ResumeIntent") {
