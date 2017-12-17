@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     region = "us-east-1"
     bucket = "jbergknoff-deploy"
-    key = "${var.project_name}/terraform.tfstate"
+    key = "alexa-youtube-player/terraform.tfstate"
   }
 }
 

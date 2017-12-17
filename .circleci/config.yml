@@ -39,7 +39,6 @@ jobs:
           command: zip -r $ZIP_FILENAME README.md index.js package.json node_modules
       - run:
           command: |
-            # TODO new IAM user
             terraform init -backend-config="access_key=AKIAJMJJWS7DZ4QQDY7Q" -backend-config="secret_key=$AWS_SECRET" terraform-config
             terraform apply -var "aws_secret=$AWS_SECRET" -var "zip_filename=$ZIP_FILENAME" -auto-approve terraform-config
 
