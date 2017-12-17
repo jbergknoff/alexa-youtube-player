@@ -12,6 +12,9 @@ jobs:
       - run:
           command: pwd; ls; npm install
 
+      - run:
+          command: apk add --no-cache ca-certificates
+
       - persist_to_workspace:
           root: .
           paths:
@@ -31,10 +34,10 @@ jobs:
     working_directory: /tmp/project
     steps:
       - checkout
+      - run:
+          command: pwd; ls; apk add --no-cache zip ca-certificates
       - attach_workspace:
           at: /tmp/project
-      - run:
-          command: pwd; ls; apk add zip
       - run:
           command: zip -r $ZIP_FILENAME README.md index.js package.json node_modules
       - run:
