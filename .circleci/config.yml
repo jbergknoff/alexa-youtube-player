@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: mhart/alpine-node:6.12.2
 
-      working_directory: /tmp/project
+    working_directory: /tmp/project
     steps:
       - checkout
 
