@@ -175,15 +175,18 @@ exports.handler = (event, context, callback) => {
       return cb(null, { text: "Sorry, I couldn't understand what you said. Please ask again.", end_session: true });
     }
 
+    // TODO: "progressive response" to indicate that it's starting to search (which takes a few seconds).
+    // https://developer.amazon.com/docs/custom-skills/send-the-user-a-progressive-response.html
+    // https://github.com/alexa/alexa-cookbook/tree/master/handling-responses/progressive-response/lambda/custom
     return search(search_terms, cb);
   } else if (intent === "AMAZON.PauseIntent" || intent === "AMAZON.CancelIntent") {
-    return cb(null, { text: "Okay", pause: true, end_session: true });
+    return cb(null, { text: "Okay", pause: true });
   } else if (intent === "AMAZON.ResumeIntent") {
     // TODO
     return cb(null, { text: "Hold on, not implemented yet", end_session: true });
   } else if (unimplemented_intents.includes(intent)) {
     return cb(null, { text: "Sorry, that functionality hasn't been implemented" });
   } else {
-    return cb(null, { end_session: true });
+    return cb();
   }
 };
