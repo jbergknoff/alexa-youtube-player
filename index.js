@@ -168,7 +168,7 @@ exports.handler = (event, context, callback) => {
 
   const intent = (event.request.intent || {}).name;
   if (event.request.type === "LaunchRequest") {
-    return cb(null, { text: "Tell me to play something or look for something" });
+    return cb(null, { text: "Tell me to play something or search for something" });
   } else if (intent === "SearchIntent") {
     const search_terms = (((event.request.intent || {}).slots || {})["SearchTerms"] || {}).value;
     if (!search_terms) {
@@ -187,6 +187,6 @@ exports.handler = (event, context, callback) => {
   } else if (unimplemented_intents.includes(intent)) {
     return cb(null, { text: "Sorry, that functionality hasn't been implemented" });
   } else {
-    return cb();
+    //return cb();
   }
 };
