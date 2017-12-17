@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: mhart/alpine-node:6.12.2
 
+      working_directory: /tmp/project
     steps:
       - checkout
 
@@ -12,7 +13,7 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
-          command: npm install
+          command: pwd; ls; npm install
 
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -20,7 +21,7 @@ jobs:
             - ./node_modules
 
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: .
           paths:
             - node_modules
 
@@ -35,14 +36,13 @@ jobs:
           YOUTUBE_API_KEY: $YOUTUBE_API_KEY
           ZIP_FILENAME: youtube-player-lambda.zip
 
+    working_directory: /tmp/project
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /tmp/project
       - run:
-          command: mv /tmp/workspace/node_modules .
-      - run:
-          command: apk add zip
+          command: pwd; ls; apk add zip
       - run:
           command: zip -r $ZIP_FILENAME README.md index.js package.json node_modules
       - run:
