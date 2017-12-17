@@ -37,7 +37,7 @@ const generate_alexa_response = (options) => {
         playBehavior: "REPLACE_ALL",
         audioItem: {
           stream: {
-            token: options.audio_url,
+            token: `${Date.now()}-${options.audio_url}`, // Make token unique: does this help with audio cutting out after a few seconds?
             url: options.audio_url
           }
         }
@@ -188,6 +188,6 @@ exports.handler = (event, context, callback) => {
   } else if (unimplemented_intents.includes(intent)) {
     return cb(null, { text: "Sorry, that functionality hasn't been implemented" });
   } else {
-    return cb();
+    return cb(null, { end_session: true });
   }
 };
