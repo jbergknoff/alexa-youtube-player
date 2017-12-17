@@ -9,16 +9,8 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-
       - run:
           command: pwd; ls; npm install
-
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
 
       - persist_to_workspace:
           root: .
