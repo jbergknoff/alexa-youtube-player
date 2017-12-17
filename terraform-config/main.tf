@@ -60,6 +60,12 @@ resource "aws_lambda_function" "alexa_handler" {
   runtime = "nodejs6.10"
   filename = "${var.zip_filename}"
   source_code_hash = "${base64sha256(file(var.zip_filename))}"
+
+  environment {
+    variables = {
+      YOUTUBE_API_KEY = "${var.youtube_api_key}"
+    }
+  }
 }
 
 # cf. https://github.com/terraform-providers/terraform-provider-aws/blob/0dc757f03080416b9770d2c02ca843db27ef7bd9/examples/alexa/main.tf#L6-L12

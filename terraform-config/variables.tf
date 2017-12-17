@@ -15,3 +15,7 @@ variable "project_name" {
 variable "zip_filename" {
   type = "string"
 }
+
+variable "youtube_api_key" {
+  type = "string"
+}

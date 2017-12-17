@@ -27,6 +27,7 @@ jobs:
       - image: hashicorp/terraform:0.11.1
         environment:
           AWS_SECRET: $AWS_SECRET
+          YOUTUBE_API_KEY: $YOUTUBE_API_KEY
           ZIP_FILENAME: youtube-player-lambda.zip
 
     steps:
@@ -40,7 +41,12 @@ jobs:
       - run:
           command: |
             terraform init -backend-config="access_key=AKIAJMJJWS7DZ4QQDY7Q" -backend-config="secret_key=$AWS_SECRET" terraform-config
-            terraform apply -var "aws_secret=$AWS_SECRET" -var "zip_filename=$ZIP_FILENAME" -auto-approve terraform-config
+            terraform apply \
+              -var "aws_secret=$AWS_SECRET" \
+              -var "zip_filename=$ZIP_FILENAME" \
+              -var "youtube_api_key=$YOUTUBE_API_KEY" \
+              -auto-approve \
+              terraform-config
 
 workflows:
   version: 2
