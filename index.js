@@ -58,6 +58,7 @@ const generate_alexa_response = (options) => {
 };
 
 // Look for the best quality MP4/AAC audio-only file.
+// Formats supported by Alexa: https://forums.developer.amazon.com/articles/38590/alexa-audioplayer-approved-formats.html
 const find_best_format = (formats) => {
   return formats.reduce(
     (current_best, format) => {
@@ -138,7 +139,7 @@ const search = (search_terms, callback) => {
 
       console.log(`Playing ${video_information.video_id}`);
       // video_information.length_seconds
-      return callback(null, { text: `Playing ${video_information.title}`, audio_url: audio_url }); // TODO: speak duration before playing
+      return callback(null, { text: `Playing ${video_information.title}`, audio_url: audio_url, end_session: true }); // TODO: speak duration before playing
     }
   );
 }
@@ -187,6 +188,6 @@ exports.handler = (event, context, callback) => {
   } else if (unimplemented_intents.includes(intent)) {
     return cb(null, { text: "Sorry, that functionality hasn't been implemented" });
   } else {
-    //return cb();
+    return cb();
   }
 };
