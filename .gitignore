@@ -1,0 +1,4 @@
+node_modules/
+
+# Using Node 6 in Lambda which is bundled with npm 3 which doesn't use package-lock.json
+package-lock.json

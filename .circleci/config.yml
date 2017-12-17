@@ -1,0 +1,56 @@
+version: 2
+
+jobs:
+  test-job:
+    docker:
+      - image: mhart/alpine-node:6.12.2
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+
+      - run:
+          command: npm install
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
+      - run:
+          command: npm test
+
+  deploy-job:
+    docker:
+      - image: hashicorp/terraform:0.11.1
+        environment:
+          AWS_SECRET: $AWS_SECRET
+          ZIP_FILENAME: youtube-player-lambda.zip
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          command: apk add zip
+      - run:
+          command: zip -r $ZIP_FILENAME README.md index.js package.json node_modules
+      - run:
+          command: |
+            # TODO new IAM user
+            terraform init -backend-config="access_key=AKIAJMJJWS7DZ4QQDY7Q" -backend-config="secret_key=$AWS_SECRET" terraform-config
+            terraform apply -var "aws_secret=$AWS_SECRET" -var "zip_filename=$ZIP_FILENAME" -auto-approve terraform-config
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test-job
+      - deploy-job:
+          requires:
+            - test-job
+          filters:
+            branches:
+              only: master
