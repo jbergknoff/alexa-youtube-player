@@ -19,6 +19,11 @@ jobs:
           paths:
             - ./node_modules
 
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - node_modules
+
       - run:
           command: npm test
 
@@ -32,8 +37,10 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: mv /tmp/workspace/node_modules .
       - run:
           command: apk add zip
       - run:
