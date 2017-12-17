@@ -60,6 +60,7 @@ resource "aws_lambda_function" "alexa_handler" {
   runtime = "nodejs6.10"
   filename = "${var.zip_filename}"
   source_code_hash = "${base64sha256(file(var.zip_filename))}"
+  timeout = 30
 
   environment {
     variables = {

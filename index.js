@@ -111,6 +111,8 @@ const search = (search_terms, callback) => {
               return cb({ text: "Sorry, didn't find any results for that search. Try a different search.", end_session: true });
             }
 
+            console.log(`Got search results: ${search_results}`);
+
             cb(null, search_results);
           }
         );
@@ -124,6 +126,7 @@ const search = (search_terms, callback) => {
           return cb({ text: "Sorry, this video didn't have a compatible audio file available.", end_session: true });
         }
 
+        console.log(`Found a format that we should use: ${JSON.stringify(best_format)}`);
         cb(null, video_information, best_format.url);
       }
     ],
@@ -133,6 +136,7 @@ const search = (search_terms, callback) => {
         return callback(null, error);
       }
 
+      console.log(`Playing ${video_information.video_id}`);
       // video_information.length_seconds
       return callback(null, { text: `Playing ${video_information.title}`, audio_url: audio_url }); // TODO: speak duration before playing
     }
