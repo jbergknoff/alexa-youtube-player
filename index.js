@@ -84,12 +84,12 @@ const find_best_format = (formats) => {
   );
 };
 
-const search = (intent, callback) => {
+const search = (search_terms, callback) => {
   const q = querystring.stringify(
     {
       part: "id",
       maxResults: 3,
-      q: intent.search_term, // TODO
+      q: search_terms,
       key: process.env.YOUTUBE_API_KEY
     }
   );
@@ -166,6 +166,11 @@ exports.handler = (event, context, callback) => {
   if (event.request.type === "LaunchRequest") {
     return cb(null, { text: "Tell me to play something or look for something" });
   } else if (intent === "SearchIntent") {
+    const search_terms = (((event.request.intent || {}).slots || {})["SearchTerms"] || {}).value;
+    if (!search_terms) {
+      return cb(null, { text: "Sorry, I couldn't understand what you said. Please ask again.", end_session: true });
+    }
+
     return search(event.request.intent || {}, cb);
   } else if (intent === "AMAZON.PauseIntent" || intent === "AMAZON.CancelIntent") {
     return cb(null, { text: "Okay", pause: true, end_session: true });
