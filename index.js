@@ -85,26 +85,30 @@ const find_best_format = (formats) => {
 };
 
 const search = (search_terms, callback) => {
-  const q = querystring.stringify(
-    {
-      part: "id",
-      maxResults: 3,
-      q: search_terms,
-      key: process.env.YOUTUBE_API_KEY
-    }
-  );
-
   async.waterfall(
     [
       (cb) => {
+        const q = querystring.stringify(
+          {
+            part: "snippet",
+            maxResults: 3,
+            q: search_terms,
+            key: process.env.YOUTUBE_API_KEY
+          }
+        );
+
+        const request_url = `https://www.googleapis.com/youtube/v3/search?${q}`
+        console.log(`Making search request to YouTube: ${request_url}`);
         needle.get(
-          `https://www.googleapis.com/youtube/v3/search?${q}`,
+          request_url,
           { parse_response: true },
           (error, response, body) => {
             if (error || ~~(response || {}).statusCode !== 200) {
               console.log(`Failed searching YouTube: ${(response || {}).statusCode}\n${error || body}`);
               return cb({ text: "Sorry, searching YouTube failed. Try again later.", end_session: true });
             }
+
+            console.log(`YouTube search results: ${JSON.stringify(body)}`);
 
             const search_results = (body.items || []).map((item) => ((item || {}).id || {}).videoId).filter((x) => x);
             if (search_results.length == 0) {
